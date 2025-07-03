@@ -12,9 +12,6 @@ Task_A/
 ├── male/
 └── female/
 
-yaml
-Copy
-Edit
 
 Each subfolder contains face images of the corresponding gender.
 
