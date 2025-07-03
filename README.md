@@ -1,147 +1,126 @@
-# Comys Hackathon 5: Face-Intelligence-Tasks
 
-This repository contains solutions for two computer vision tasks:
+# Face-Intelligence-Tasks
 
-- **Task A: Gender Classification (Binary Classification)**
-- **Task B: Face Recognition with Distorted Images (Multi-Class Classification)**
+This repository addresses two challenging computer vision problems using the **FACECOM** dataset:
+
+- **Task A: Gender Classification**
+- **Task B: Face Recognition with Distorted Images**
 
 ---
 
-## 📁 Folder Structure
+## 🧠 Task A: Gender Classification
+
+### 🎯 Objective
+
+To classify facial images as either **male** or **female**.
+
+### ⚙️ Model & Techniques
+
+- **Architecture**: Transfer learning using **EfficientNet-B0** via `efficientnet_pytorch`.
+- **Augmentation**: Utilized `torchvision.transforms` for resizing, normalization, flipping, etc.
+- **Loss Function**: Binary Cross-Entropy with Logits (`BCEWithLogitsLoss`)
+- **Optimizer**: Adam optimizer with gradient scaling (`GradScaler`) for AMP (Automatic Mixed Precision)
+- **Training Techniques**:
+  - Weighted sampling to address class imbalance
+  - Mixed precision training for speed and efficiency
+  - Early stopping logic
+- **Evaluation**:
+  - Accuracy, Precision, Recall, F1-score
+  - Confusion Matrix
+  - Classification Report from `sklearn`
+
+### 📂 Data Structure
+
+```
+Task_A/
+├── train/
+│   ├── male/
+│   └── female/
+└── val/
+    ├── male/
+    └── female/
+```
+
+---
+
+## 🧑‍💻 Task B: Face Recognition with Distorted Images
+
+### 🎯 Objective
+
+To recognize and match distorted face images to their corresponding identities.
+
+### ⚙️ Model & Approach
+
+- **Architecture**: 
+  - Used **EfficientNetV2-S** from `timm` as the backbone
+  - Integrated with an **ArcFace head** for discriminative embeddings
+- **Embedding Strategy**:
+  - Anchor images (clean faces) and distorted versions are processed into embeddings
+  - Compared via **cosine similarity**
+- **Loss Function**: ArcMarginProduct + CrossEntropyLoss
+- **Optimizer**: AdamW
+- **Training Enhancements**:
+  - Cosine Annealing LR scheduler
+  - Label smoothing
+- **Thresholding**:
+  - Used cosine similarity histograms to tune decision thresholds for matching
+
+### 📂 Data Structure
+
+```
+Task_B/
+├── person1/
+│   ├── img.jpg
+│   └── distortion/
+│       ├── aug1.jpg
+│       └── aug2.jpg
+├── person2/
+│   ├── img.jpg
+│   └── distortion/
+        ...
+```
+
+### 📊 Evaluation
+
+- Pair-wise identity match prediction
+- Accuracy, Precision, Recall, F1-score computed using ground truth pairs
+- Visualizations:
+  - Histogram of cosine similarities
+  - Confusion Matrix
+  - ROC-like threshold plots
+
+---
+
+## ✅ Requirements
+
+- Python 3.8+
+- torch, torchvision, efficientnet_pytorch, timm
+- scikit-learn, matplotlib, pandas, seaborn
+- tqdm, PIL
+
+---
+
+## 📁 Project Structure
 
 ```
 Comys_Hackathon5/
-│
 ├── Task_A/
-│   ├── train/         # Training images (male/, female/)
-│   ├── val/           # Validation images (male/, female/)
-│   └── task-a.ipynb   # Gender classification notebook
-│
+│   ├── train/
+│   ├── val/
+│   └── Task_A.ipynb
 ├── Task_B/
-│   ├── train/         # Training images (per-person folders)
-│   ├── val/           # Validation images (per-person folders, with distortion/)
-│   └── task-b.ipynb   # Face recognition notebook
+│   ├── train/
+│   ├── val/
+│   └── Task_B.ipynb
+└── README.md
 ```
 
 ---
 
-## Task A: Gender Classification
+## 🚀 Conclusion
 
-**Objective:**  
-Train a model to classify face images as either male or female.
+This repository showcases deep learning techniques for:
+- Gender classification with class imbalance handling
+- Face recognition under distortions using ArcFace
 
-- Uses a pretrained ResNet18 model with data augmentation and weighted sampling for class imbalance.
-- Evaluates performance with classification report and confusion matrix.
-
-**How to Run:**
-1. Place your data in `Task_A/train/` and `Task_A/val/` with subfolders `male/` and `female/`.
-2. Open a terminal or Jupyter/VS Code and **change your working directory to `Task_A`**:
-    ```bash
-    cd Comys_Hackathon5/Task_A
-    ```
-3. Open and run `task-a.ipynb`.
-4. The notebook expects the following structure:
-    ```
-    Task_A/
-      ├── train/
-      │   ├── male/
-      │   └── female/
-      ├── val/
-      │   ├── male/
-      │   └── female/
-      └── task-a.ipynb
-    ```
-5. The default dataset paths (`./train`, `./val`) will work as long as you run the notebook from inside the `Task_A` folder.
-6. The "train_dir" and "val_dir" contains training data directory path and validation data directory path respectively.
-7. For evaluating on a new dataset, change the path of "test_dir" with your data directory path.
-
----
-
-## Task B: Face Recognition with Distorted Images
-
-**Objective:**  
-Match a face image (including distorted versions) to the correct person.
-
-- Uses a pretrained FaceNet model for embedding extraction.
-- Matches distorted images to clean ones using cosine similarity.
-- Evaluates with accuracy, F1 score, and visualizations.
-
-**How to Run:**
-1. Place your data in `Task_B/train/` and `Task_B/val/` with each person in a separate folder.  
-   Place distorted images in a `distortion/` subfolder inside each person’s folder.
-2. Open a terminal or Jupyter/VS Code and **change your working directory to `Task_B`**:
-    ```bash
-    cd Comys_Hackathon5/Task_B
-    ```
-3. Open and run `task-b.ipynb`.
-4. The notebook expects the following structure:
-    ```
-    Task_B/
-    ├── train/
-    │   ├── person1/
-    │   │   ├── img1.jpg
-    │   │   ├── img2.jpg
-    │   │   └── ...
-    │   │   └── distortion/
-    │   │       ├── distorted1.jpg
-    │   │       ├── distorted2.jpg
-    │   │       └── ...
-    │   ├── person2/
-    │   │   ├── img1.jpg
-    │   │   └── ...
-    │   └── ...
-    │
-    ├── val/
-    │   ├── personx/
-    │   │   ├── img_clean1.jpg
-    │   │   ├── img_clean2.jpg
-    │   │   ├── ...
-    │   │   └── distortion/
-    │   │       ├── distorted1.jpg
-    │   │       ├── distorted2.jpg
-    │   │       └── ...
-    │   ├── persony/
-    │   │   ├── img_clean1.jpg
-    │   │   └── distortion/
-    │   │       ├── distorted1.jpg
-    │   │       └── ...
-    │   └── ...
-    │   └── task-b.ipynb
-    ```
-5. The default dataset paths (`./train`, `./val`) will work as long as you run the notebook from inside the `Task_B` folder.
-6. Change the "val_dir" path with your test dataset path if needed.
-
----
-
-## Requirements
-
-    - Python 3.8+
-    - torch
-    - torchvision
-    - facenet-pytorch
-    - numpy
-    - pillow
-    - matplotlib
-    - scikit-learn
-    - tqdm
-    - seaborn
-
-Install requirements with:
-```bash
-pip install torch torchvision facenet-pytorch numpy pillow matplotlib scikit-learn tqdm seaborn
-```
-
----
-
-## Notes
-
-- Update the dataset paths in the notebooks only if your folder structure is different.
-- Both notebooks are well-commented for easy understanding and modification.
-- Always check your current working directory with:
-    ```python
-    import os
-    print(os.getcwd())
-    ```
-  and make sure it matches the folder containing your notebook and data.
-
----
+It provides modular, scalable, and reproducible notebooks ready for extension to real-world biometric pipelines.
