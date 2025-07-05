@@ -10,13 +10,17 @@
   - Train the model using the training loop provided.
   - Evaluate performance using accuracy and other metrics.
  
-  - dataset/
-├── male/
-│   ├── img1.jpg
-│   ├── img2.jpg
-├── female/
-│   ├── img1.jpg
-│   ├── img2.jpg
+### Data Structure
+
+```
+Task_A/
+├── train/
+│   ├── male/
+│   └── female/
+└── val/
+    ├── male/
+    └── female/
+```
 
 Accuracy: 85.71%
 Precision: 84.5%
@@ -49,17 +53,20 @@ F1 Score: 85.2%
 
 ---
 
-dataset/
-├── male/
-│   ├── distortion/
-│       ├── blurred.jpg
-|       ├── lowlight.jpg
-│   ├── frontal.jpg
-├── female/
-│   ├── distortion/
-│       ├── blurred.jpg
-|       ├── lowlight.jpg
-│   ├── frontal.jpg
+### Data Structure
+
+```
+Task_B/
+├── person1/
+│   ├── img.jpg
+│   └── distortion/
+│       ├── aug1.jpg
+│       └── aug2.jpg
+├── person2/
+│   ├── img.jpg
+│   └── distortion/
+        ...
+```
 
 ## 📊 Evaluation Example (Task B)
 
