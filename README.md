@@ -71,6 +71,7 @@ Task_B/
 ## 📊 Evaluation Example (Task B)
 
 ```text
-Accuracy: ~77%
-F1 Score: ~76%
+Top-1 Accuracy: 0.8032
+Macro-Averaged F1 Score: 1.0000
+```
 
